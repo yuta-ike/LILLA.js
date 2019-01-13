@@ -15,7 +15,8 @@ class InterfaceAcceptable{
     }
 }
 
+export{Interface, InterfaceAcceptable}
 
-//Abstract関係
-class Abstract{}
-class AbstractAcceptable{}
+// //Abstract関係
+// class Abstract{}
+// class AbstractAcceptable{}

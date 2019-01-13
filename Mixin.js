@@ -153,46 +153,47 @@ const mix = function(...cls){
     }
 }
 
+export {ComponentManager, mix}
 
-class Compo{
-    constructor(a,b){
-        this.a = 12
-        this.b = a+b
-    }
-
-    funcA(){
-        console.log("Compo")
-        this.x += 1000
-    }
-
-    funcB(){
-        console.log("Compo funcB")
-    }
-
-    set z(n){
-        this._z = n
-    }
-
-    get z(){
-        return this._z
-    }
-}
-class Compo2{}
-
-class A extends ComponentManager{
-    constructor(){
-        super()
-        this.x = 5
-        this.y = 10
-        this.a = 13
-        this.attach(Compo,10,23)
-    }
-
-    funcA(arg){
-        console.log("A")
-        this.x += 2000 + arg
-    }
-}
+// class Compo{
+//     constructor(a,b){
+//         this.a = 12
+//         this.b = a+b
+//     }
+//
+//     funcA(){
+//         console.log("Compo")
+//         this.x += 1000
+//     }
+//
+//     funcB(){
+//         console.log("Compo funcB")
+//     }
+//
+//     set z(n){
+//         this._z = n
+//     }
+//
+//     get z(){
+//         return this._z
+//     }
+// }
+// class Compo2{}
+//
+// class A extends ComponentManager{
+//     constructor(){
+//         super()
+//         this.x = 5
+//         this.y = 10
+//         this.a = 13
+//         this.attach(Compo,10,23)
+//     }
+//
+//     funcA(arg){
+//         console.log("A")
+//         this.x += 2000 + arg
+//     }
+// }
 
 
 // // TODO: Aにmixつけたら挙動変わる
