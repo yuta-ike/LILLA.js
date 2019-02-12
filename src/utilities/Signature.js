@@ -1,19 +1,10 @@
 "use strict"
-
 //無名クラスの場合は "" が返る
 const getType = function(target){
     if(arguments.length == 0) throw new Error("Argument is empty!!")
     const type = Object.prototype.toString.call(target)
     const result = type.slice(8,-1)
     return result == "Object" ? target.constructor.name : result;
-}
-
-const sgn = function(...args){
-    const sgn = []
-    for(const arg of args){
-        sgn.push(getType(arg))
-    }
-    return new Signature(...sgn)
 }
 
 class Signature extends Array{
@@ -35,5 +26,13 @@ class Signature extends Array{
     }
 }
 
+const sgn = function(...args){
+    const sgn = []
+    for(const arg of args){
+        sgn.push(getType(arg))
+    }
+    return new Signature(...sgn)
+}
+export default sgn
 // console.log(sgn(0,"0",true).equal(1,"a",false)) //true
 // console.log(sgn(0,"0",true).is("Number","String","Boolean")) //true

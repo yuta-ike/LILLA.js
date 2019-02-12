@@ -1,4 +1,3 @@
-// インターフェース関係
 class Interface{
     error(){ throw new Error("Method must be overloaded") }
 }
@@ -15,8 +14,5 @@ class InterfaceAcceptable{
     }
 }
 
-export{Interface, InterfaceAcceptable}
-
-// //Abstract関係
-// class Abstract{}
-// class AbstractAcceptable{}
+export default Interface
+export {InterfaceAcceptable}
