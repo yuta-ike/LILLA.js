@@ -1,17 +1,24 @@
-const obj = {x:1}
+"use strict"
+const symbols = {
+    singleton: Symbol("__singleton__"),
+    abstract: Symbol("__abstract__"),
+    struct:Symbol("__stract__"),
+}
 
-Object.defineProperty(obj, "y", {
-    set:() => {throw new Error("aaa")},
-    get:() => obj._y,
-    configurable:true
+class A{
+    constructor(){
+        this.x = 1
+    }
+}
+
+const _A = new Proxy(A, {
+    construct: (...args) => {
+        return Object.seal(Reflect.construct(...args))
+    }
 })
 
-Object.defineProperty(obj, "y", {
-    set:() => obj._y = 100,
-    get:() => obj._y
-})
-
-
-console.log(obj)
+console.log(_A[symbols.struct]())
+const a = new _A()
+console.log(a)
 
 ;

@@ -1,17 +1,22 @@
-//static
+const symbols = {
+    singleton: Symbol("__singleton__"),
+    abstract: Symbol("__abstract__"),
+    struct:Symbol("__stract__"),
+}
+
 const instances = new WeakMap()
 const Singleton = cls => {
     if(instances.has(cls)){
         return instances.get(cls)
     }
     const instance = new cls()
+    instance[symbols.singleton] = true
     instances.set(cls, instance)
     return instance
 }
 
-const isAbstract = Symbol("__isAbstract__")
 const Abstract = cls =>{
-    if(cls[isAbstract]) return cls //すでに抽象クラスである場合、clsをそのまま返す
+    if(cls[symbols.abstract]) return cls //すでに抽象クラスである場合、clsをそのまま返す
 
     new cls() //一度インスタンス化する必要がある
     const res = new Proxy(cls, {
@@ -23,8 +28,19 @@ const Abstract = cls =>{
             return instance
         }
     })
-    res[isAbstract] = true
+    res[symbols.abstract] = true
     return res
 }
 
-export {Singleton, Abstract}
+const Struct = cls => {
+    const res = new Proxy(cls, {
+        construct: (...args) => {
+            return Object.seal(Reflect.construct(...args))
+        }
+    })
+    res[symbols.struct] = true
+    return res
+}
+
+export {Singleton, Abstract, Struct}
+//exxport default {Singleton, Abstract, Struct}
