@@ -8,50 +8,8 @@ import OBJECT from "./ObjectBuilder.js"
 
 import LayerManager from "./Layer.js"
 import InputReceiver from "./Input.js"
+import SceneManager from "./Scene.js"
 
-class Scene extends OBJECT.GameObject{
-    constructor(name, tag, rect, priority=0,{origin}){
-        super(name, tag, [0, 0], {origin})
-        this.rect = rect
-        this.priority = priority
-    }
-}
-
-class SceneManager{
-    constructor(){
-        this._scenes = new Map()
-    }
-
-    generate(name, tag, rect, priority, {origin}){
-        if(this._scenes.has(name)) throw new Error(`Scene name ${name} has already used`)
-
-        const newScene = new Scene(name, tag, rect, priority, {origin})
-        newScene.addEventListener("transferscene", sceneName => {
-            newScene.deactivate();
-            this._scenes.get(sceneName).activate()
-        })
-        newScene.addEventListener("activatescene", sceneName => {
-            this._scenes.get(sceneName).activate()
-            return this._scenes.get(sceneName)
-        })
-        newScene.addEventListener("deactivatescene", sceneName => {
-            this._scenes.get(sceneName).activate()
-            return this._scenes.get(sceneName)
-        })
-
-        this._scenes.set(name,newScene)
-        this.currentSceneName = this.currentSceneName || name
-        return newScene
-    }
-
-    get scenes(){ return this._scenes }
-    get entries(){ return Array.from(this._scenes.entries()) }
-    get keys()   { return Array.from(this._scenes.keys())}
-    get values() { return Array.from(this._scenes.values())}
-    get scenesOrderd(){
-        return Array.from(this._scenes).sort(([k1,v1], [k2,v2]) => v2.priority - v1.priority)
-    }
-}
 
 /*Gameクラスはchildrenを持たない（代わりにSceneManager、LayerManager）*/
 class Game extends OBJECT.GameObject{
@@ -59,9 +17,6 @@ class Game extends OBJECT.GameObject{
         super(name, tag, [0, 0], {origin:[x,y]})
         this.name = name
         this.screenRect = screenRect
-
-        this.sm = new SceneManager()
-        // this.ir = new InputReceiver()
     }
     add(){
         throw new Error("Game Instance cannot be added any objects, except Scene Generating. Use generateScene method")
@@ -89,7 +44,7 @@ class Game extends OBJECT.GameObject{
     }
 
     findObjectWithName(targetName, rest = x => x){
-        const result =  this.sm.values.reduce((acc,child) => acc || child.findObjectWithName(targetName), null)
+        const result =  SceneManager.values.reduce((acc,child) => acc || child.findObjectWithName(targetName), null)
                       ||LayerManager.values.reduce((acc,child) => acc || child.findObjectWithName(targetName), null)
         if(rest(result)) return result
         console.warn(`Cannot find object named "${targetName}"`)
@@ -97,7 +52,7 @@ class Game extends OBJECT.GameObject{
     }
 
     generateScene(name, tag, rect = this.screenRect, priority){
-        return this.sm.generate(name, tag, rect, priority, {origin:[this.g.x,this.g.y]})
+        return SceneManager.generate(name, tag, rect, priority, {origin:[this.g.x,this.g.y]})
     }
 
     generateLayer(name, tag, rect = this.screenRect, priority = 0, layerType = "normal"){
@@ -110,7 +65,7 @@ class Game extends OBJECT.GameObject{
     }
 
     _initAll(){
-        this.sm.scenes.forEach(scene => scene.initAll())
+        SceneManager.scenes.forEach(scene => scene.initAll())
         LayerManager.layers.forEach(layer => layer.initAll())
     }
 
@@ -131,7 +86,7 @@ class Game extends OBJECT.GameObject{
     _step(){
         //update
         const input = InputReceiver.getInfo()
-        this.sm.scenes.forEach(scene => {if(scene.isActive) scene.updateAll(input)})
+        SceneManager.scenes.forEach(scene => {if(scene.isActive) scene.updateAll(input)})
 
         //hitTest
         this._hitTest()
@@ -146,7 +101,7 @@ class Game extends OBJECT.GameObject{
     }
 
     _hitTest(){
-        this.sm.scenes.forEach(scene => scene.hitTest())
+        SceneManager.scenes.forEach(scene => scene.hitTest())
     }
 }
 

@@ -1,5 +1,5 @@
-privateへの対応
 Rectangle Circleのmask
+ComposedFigureへの対応
 
 inputは座標をlocalizeして使わないといけない
 
@@ -7,20 +7,11 @@ Scene間の当たり判定は行わない
 当たり判定精度上げる
 座標管理モードと物理モード
 
-frozen sealed(overloadの禁止)
-
 hitはイベント管理にする
 
 Mixin
-// TODO: Ruby的にgetter setter をかける
-// this.x{
-//    get(){...},
-//    set(){...}
-//}的な
-// TODO: static method への対応s
-
-ComposedFigureへの対応
+// TODO: static method への対応
 
 コルーチン Rx
-
 Overrideを禁止するprotected
+privateへの対応
