@@ -1,4 +1,4 @@
-"use strict"
+//従来の書き方
 class Obj1 extends RigidObject{
     constructor(...args){
         super(...args)
