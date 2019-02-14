@@ -1,24 +1,26 @@
 "use strict"
-const symbols = {
-    singleton: Symbol("__singleton__"),
-    abstract: Symbol("__abstract__"),
-    struct:Symbol("__stract__"),
-}
-
-class A{
+class B{
     constructor(){
+        this.b = "BBB"
+    }
+}
+class A extends B{
+    constructor(){
+        console.log("constructor")
+    }
+
+    create(){
+        console.log("create")
         this.x = 1
     }
+
+    show(){
+        console.log(this.x, this.b)
+    }
 }
 
-const _A = new Proxy(A, {
-    construct: (...args) => {
-        return Object.seal(Reflect.construct(...args))
-    }
-})
 
-console.log(_A[symbols.struct]())
-const a = new _A()
-console.log(a)
+const a = new A()
+a.show()
 
 ;

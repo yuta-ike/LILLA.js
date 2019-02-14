@@ -48,4 +48,4 @@ class SceneManager{
 export default Module.Singleton(SceneManager)
 
 const instanceofScene = instance => instance instanceof Scene || instance.mixedwith && instance.mixedwith(Scene)
-export {instanceofFigure}
+export {instanceofScene}
