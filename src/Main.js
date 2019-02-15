@@ -1,4 +1,4 @@
-import * as LILLA from "./LILLA.js"
+import LILLA from "./LILLA.js"
 
 class Obj1 extends LILLA.OBJECT.RigidObject{
     constructor(...args){
@@ -30,12 +30,13 @@ class Obj2 extends LILLA.OBJECT.RigidObject{
         // console.log(args[1])
     }
 }
-
 LILLA.OBJECT.Define(Obj1)
 LILLA.OBJECT.Define(Obj2)
 
 window.onload = ()=>{
-    LILLA.ASSETS.addImage("plain","plain_45.jpg")
+    LILLA.ASSETS.addImages({
+        plain: "plain_45.jpg"
+    })
     LILLA.ASSETS.loadAll().then(()=>{
         const GAME = LILLA.GAME_CREATER.Create({
             name:"test_game",

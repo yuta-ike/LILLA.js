@@ -4,4 +4,4 @@ import ASSETS from "./AssetLoader.js"
 import SPRITE from "./Sprite.js"
 import OBJECT from "./ObjectBuilder.js"
 import GAME_CREATER from "./GameBuilder.js"
-export {FIGURE, ASSETS, SPRITE, OBJECT, GAME_CREATER}
+export default {FIGURE, ASSETS, SPRITE, OBJECT, GAME_CREATER}

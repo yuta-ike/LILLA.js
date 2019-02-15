@@ -36,6 +36,10 @@ export default new class AssetLoader{
         this._promises.push(promise)
     }
 
+    addImages(imgs){
+        Object.entries(imgs).forEach(([name, url]) => this.addImage(name, url))
+    }
+
     loadAll(){
         return Promise.all(this._promises).then(() => this._assets).catch((e) => console.log(e))
     }

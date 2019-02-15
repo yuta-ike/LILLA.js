@@ -11,6 +11,7 @@ class Game extends OBJECT.GameObject{
         super(name, tag, [0, 0], {origin:[x,y]})
         this.name = name
         this.screenRect = screenRect
+        this.test = 1
     }
     add(){
         throw new Error("Game Instance cannot be added any objects, except Scene Generating. Use generateScene method")
@@ -91,7 +92,7 @@ class Game extends OBJECT.GameObject{
         //layerclear
         LayerManager.values.filter(layer => layer.type === "normal").forEach(layer => layer.clear())
         //render
-        LayerManager.valuesOrderd.forEach(([name,layer]) => {if(layer.type === "normal" && layer.isActive)layer.renderAll()})
+        LayerManager.valuesOrderd.forEach(([ ,layer]) => {if(layer.type === "normal" && layer.isActive)layer.renderAll()})
     }
 
     _hitTest(){
@@ -113,21 +114,21 @@ const GAME_CREATER = {
 }
 
 // let hasConstructed = false
-// let instance;
+// let instance
 // Game.Create = function(){console.log("create!!")}
 // const GAME = new Proxy(Game, {
-//     get: (target, property, receiver) => {
+//     get: (target, property) => {
 //         if(!hasConstructed){
 //             if(property === "Create"){
 //                 hasConstructed = true
-//                 return Reflect.get(target, property, receiver)
+//                 return (args) => instance = new target(args.name, [], args.screenRect, args.pos)
 //             }
 //             throw new Error(`Call create method before call another method.`)
 //         }else{
 //             if(property === "Create"){
 //                 throw new Error("Invalid function call of constructor-like method. Constructor-like method (Create) can be called only at once.")
 //             }
-//             return Reflect.get(target, property, receiver)
+//             return Reflect.get(instance, property)
 //         }
 //     },
 // })
@@ -137,5 +138,4 @@ const GAME_CREATER = {
   ...
   みたいに書きたい
 */
-
 export default GAME_CREATER
