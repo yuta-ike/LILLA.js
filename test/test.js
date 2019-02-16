@@ -1,5 +1,11 @@
 "use strict"
 
+const m = new Map()
+m.set("x",1)
+m.set("greet", "hello")
+const x = Array.from(m.entries()).reduce((acc, [k,v]) => {console.log(acc,v);acc.push(v);return acc}, [])
+console.log(x)
+
 class Parent{
     constructor(x){
         this.x = x

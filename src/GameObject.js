@@ -84,6 +84,9 @@ class GameObject extends RootClass{
 
     updateAll(input){
         const hit = this.hr.getHit()
+        hit.getHitEnterAll().forEach(obj => this.dispatchEvent("OnHitEnter", obj))
+        hit.getHitAll().forEach(obj => this.dispatchEvent("OnHit", obj))
+        hit.getHitExitAll().forEach(obj => this.dispatchEvent("OnHitExit", obj))
 
         this.update(input, hit)
         this.children.forEach( childObj => childObj.updateAll(input) )
@@ -116,8 +119,8 @@ class GameObject extends RootClass{
         CC.cart(rigidChildren, rigidProgeny).forEach(([prog1, prog2]) => {
             const hit = prog1.hitArea.hitTest(prog2.hitArea)
             if(hit){
-                prog1.hit(prog2, new HitInfo("child"))
-                prog2.hit(prog1, new HitInfo("parent"))
+                prog1.hit(new HitInfo(prog2, "child"))
+                prog2.hit(new HitInfo(prog1, "parent"))
             }
         })
 
@@ -125,8 +128,8 @@ class GameObject extends RootClass{
         return [...rigidChildren, ...rigidProgeny]
     }
 
-    hit(counter, hitInfo){
-        this.hr.record(counter, hitInfo)
+    hit(hitInfo){
+        this.hr.record(hitInfo)
     }
 
     get isActive(){ return this._active }
@@ -139,8 +142,8 @@ class HitRecorder{
         this._hitMap = new Map()
         this._prevHitMap = new Map()
     }
-    record(counter, hitInfo){
-        this._hitMap.set(counter, hitInfo)
+    record(hitInfo){
+        this._hitMap.set(hitInfo.counter, hitInfo)
     }
     getHit(){
         const res = new Hit(this._hitMap,this._prevHitMap)
@@ -151,7 +154,8 @@ class HitRecorder{
 }
 
 class HitInfo{
-    constructor(hitType){
+    constructor(counter, hitType){
+        this.counter = counter
         this.hitType = hitType
     }
 }
@@ -162,13 +166,29 @@ class Hit{
         this.prevHitMap = prevHitMap
     }
     getHit(obj){
-        return this.hitMap(obj)
+        return this.hitMap.get(obj)
     }
     getHitEnter(obj){
-        return this.hitMap(obj) && !this.prevHitMap(obj)
+        return this.hitMap.get(obj) && !this.prevHitMap.get(obj)
     }
     getHitExit(obj){
-        return !this.hitMap(obj) && this.prevHitMap(obj)
+        return !this.hitMap.get(obj) && this.prevHitMap.get(obj)
+    }
+
+    getHitAll(){
+        return Array.from(this.hitMap.entries())
+                  .filter(([obj, info]) => this.getHit(obj))
+                  .reduce((acc, [obj, info]) => (acc.push(info), acc), [])
+    }
+    getHitEnterAll(){
+        return Array.from(this.hitMap.entries())
+                  .filter(([obj, info]) => this.getHitEnter(obj))
+                  .reduce((acc, [obj, info]) => (acc.push(info), acc), [])
+    }
+    getHitExitAll(){
+        return Array.from(this.prevHitMap.entries())
+                  .filter(([obj, info]) => this.getHitExit(obj))
+                  .reduce((acc, [obj, info]) => (acc.push(info), acc), [])
     }
 }
 

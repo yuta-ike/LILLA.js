@@ -27,6 +27,7 @@ class Obj2 extends LILLA.OBJECT.RigidObject{
     }
     update(...args){
         super.update(...args)
+        // console.log(args[1])
     }
 }
 LILLA.OBJECT.Define(Obj1)
