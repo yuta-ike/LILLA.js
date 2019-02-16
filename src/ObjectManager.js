@@ -18,17 +18,15 @@ const _OBJECT = new class GameObjectManager{
         this._addProperty(RigidObject)
     }
 
-    Define(cls){
-        if(!GameObject.isPrototypeOf(cls)) throw new Error(`Only class extends GameObject can be registered. (class: ${cls})`)
-        if(this.gameObjectClasses.has(cls.name)){
-            if(this.gameObjectClasses.get(cls.name) === cls){
-                throw new Error(`Class has already existed. (class: ${cls})`)
-            }else{
-                throw new Error(`Class name has already used. (class: ${cls})`)
-            }
-        }
+    Define(cls, name = cls.name){
+        if(!GameObject.isPrototypeOf(cls))
+            throw new Error(`Only class extends GameObject can be registered. (class: ${cls})`)
+        if(Object.values(this.gameObjectClasses).includes(cls))
+            throw new Error(`Class has already existed. (className: ${name})`)
+        if(this.gameObjectClasses.has(name))
+            throw new Error(`Class name has already used. (class: ${cls})`)
 
-        this.gameObjectClasses.set(cls.name, cls)
+        this.gameObjectClasses.set(name, cls)
         this._addProperty(cls)
     }
 
