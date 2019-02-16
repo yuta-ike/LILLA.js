@@ -1,4 +1,3 @@
-import * as Module from "./utilities/ModuleBuilder.js"
 import GameObject from "./GameObject.js"
 
 class RigidObject extends GameObject{

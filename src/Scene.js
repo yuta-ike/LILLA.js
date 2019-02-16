@@ -1,4 +1,4 @@
-import OBJECT from "./ObjectBuilder.js"
+import OBJECT from "./ObjectManager.js"
 import * as Module from "./utilities/ModuleBuilder.js"
 
 class Scene extends OBJECT.GameObject{

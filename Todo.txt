@@ -1,5 +1,8 @@
-Rectangle Circleのmask
-ComposedFigureへの対応
+当たり判定の精度あげる
+[no need] Rectangle Circleのmask
+[ok] ComposedFigureへの対応
+パイプ
+SPRITE.Figure と FIGURE がややこしい
 
 inputは座標をlocalizeして使わないといけない
 

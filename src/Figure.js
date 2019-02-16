@@ -1,8 +1,12 @@
-import {Interface, mix} from "./utilities/Utilities.js"
+import {Interface, mix, CC} from "./utilities/Utilities.js"
 import RootClass from "./RootClass.js"
 
 class Figure{
     hitTest(other){
+        return CC.cart(this.figures || [this], other.figures || [other])
+                 .reduce((acc, [thisFigure, otherFigure]) => acc || thisFigure._hitTestForUnits(otherFigure), false)
+    }
+    _hitTestForUnits(other){
         switch ([this.constructor.name, other.constructor.name].join("-")) {
             case "Rectangle-Rectangle":
                 const x = this.x <= other.x && other.x <= this.x + this.width ||
@@ -89,6 +93,16 @@ class Circle extends mix(Figure, RootClass){
     }
     get spread(){ return [this.x, this.y, this.r] }
     get r(){ return this.radius }
+}
+
+class Compound extends mix(Figure, RootClass){
+    constructor(...figures){
+        super()
+        this.figures = figures
+    }
+    render(...args){
+        this.figures.forEach(figure => figure.render(...args))
+    }
 }
 
 const FIGURE = {

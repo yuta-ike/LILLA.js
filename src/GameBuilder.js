@@ -1,5 +1,5 @@
 import {sgn} from "./utilities/Utilities.js"
-import OBJECT from "./ObjectBuilder.js"
+import OBJECT from "./ObjectManager.js"
 
 import LayerManager from "./Layer.js"
 import InputReceiver from "./Input.js"

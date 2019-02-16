@@ -44,3 +44,6 @@ const Struct = cls => {
 
 export {Singleton, Abstract, Struct}
 //exxport default {Singleton, Abstract, Struct}
+
+// Module(Singleton, Abstract)
+// Module(FIGURE).Singleton().Abstract()
