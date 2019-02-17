@@ -1,5 +1,5 @@
 import RootClass from "./RootClass.js"
-import * as Module from "./utilities/ModuleBuilder.js"
+import Module from "./utilities/ModuleBuilder.js"
 
 class Canvas extends RootClass{
     constructor(canvasElement, figure){

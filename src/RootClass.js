@@ -1,6 +1,6 @@
 import mix from "./utilities/Mixin.js"
 import Interface, {InterfaceAcceptable} from "./utilities/Interface.js"
-import * as Module from "./utilities/ModuleBuilder.js"
+import Module from "./utilities/ModuleBuilder.js"
 
 class EventDispatcher{
     constructor(){

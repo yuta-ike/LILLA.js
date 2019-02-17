@@ -1,49 +1,54 @@
-const symbols = {
-    singleton: Symbol("__singleton__"),
-    abstract: Symbol("__abstract__"),
-    struct:Symbol("__stract__"),
-}
+import Singleton from "./Modules/Singleton.js"
+import Abstract from "./Modules/Abstract.js"
+import Struct from "./Modules/Struct.js"
+import Tuple from "./Modules/Tuple.js"
 
-const instances = new WeakMap()
-const Singleton = cls => {
-    if(instances.has(cls)){
-        return instances.get(cls)
-    }
-    const instance = new cls()
-    instance[symbols.singleton] = true
-    instances.set(cls, instance)
-    return instance
-}
+/*
+Struct: 値の追加、削除、属性変更を禁止 copyメソッド
+Tuple: 値の変更まで禁止 copyメソッド
+*/
 
-const Abstract = cls =>{
-    if(cls[symbols.abstract]) return cls //すでに抽象クラスである場合、clsをそのまま返す
-
-    new cls() //一度インスタンス化する必要がある
-    const res = new Proxy(cls, {
-        construct: (...args) => {
-            const instance = Reflect.construct(...args)
-            if(instance.constructor.name === cls.name){
-                throw new Error(`${cls.name} is abstract class. Instanciation of abstract class is forbidden`)
+const Module = cls => {
+    return new ModuleData(cls, {
+        get: (target, property, receiver) => {
+            const value = Reflect.get(target, property, receiver)
+            if(value instanceof Function){
+                return (...args) => {
+                    const res = value.call(target, ...args)
+                    return res !== undefined ? res : receiver
+                }
+            }else{
+                return value
             }
-            return instance
         }
     })
-    res[symbols.abstract] = true
-    return res
 }
 
-const Struct = cls => {
-    const res = new Proxy(cls, {
-        construct: (...args) => {
-            return Object.seal(Reflect.construct(...args))
-        }
-    })
-    res[symbols.struct] = true
-    return res
+Object.assign(Module, {Singleton, Abstract, Struct, Tuple})
+
+const ModuleData = class {
+    constructor(cls, handlers = {}){
+        this.cls = cls
+        this.handlers = handlers
+        this.properties = []
+    }
+    _addHandler(newHandler){
+        Object.assign(this.handlers, newHandler)
+    }
+
+    Abstract(){
+        this.cls = Module.Abstract(this.cls)
+        return this
+    }
+    Struct(){
+        this.cls = Module.Struct(this.cls)
+        return this
+    }
+
+    Build(){
+        const res = new Proxy(this.cls, this.handlers)
+        return res
+    }
 }
 
-export {Singleton, Abstract, Struct}
-//exxport default {Singleton, Abstract, Struct}
-
-// Module(Singleton, Abstract)
-// Module(FIGURE).Singleton().Abstract()
+export default Module

@@ -1,4 +1,4 @@
-import * as Module from "./utilities/ModuleBuilder.js"
+import Module from "./utilities/ModuleBuilder.js"
 import InputInfo from "./InputInfo.js"
 
 class InputReceiver{

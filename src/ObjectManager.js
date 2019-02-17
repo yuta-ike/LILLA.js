@@ -1,4 +1,4 @@
-import * as Module from "./utilities/ModuleBuilder.js"
+import Module from "./utilities/ModuleBuilder.js"
 import GameObject, {instanceofGameObject} from "./GameObject.js"
 import RigidObject from "./RigidObject.js"
 export * from "./GameObject.js"

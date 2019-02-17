@@ -1,6 +1,6 @@
 import RootClass from "./RootClass.js"
 import CanvasManager from "./Canvas.js"
-import * as Module from "./utilities/ModuleBuilder.js"
+import Module from "./utilities/ModuleBuilder.js"
 
 class HitRecorder{
     constructor(){

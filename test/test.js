@@ -1,10 +1,32 @@
 "use strict"
 
-const m = new Map()
-m.set("x",1)
-m.set("greet", "hello")
-const x = Array.from(m.entries()).reduce((acc, [k,v]) => {console.log(acc,v);acc.push(v);return acc}, [])
-console.log(x)
+class A{
+    constructor(x){
+        this.x = x
+    }
+    test(){
+    }
+    getX(){
+      return this.x
+    }
+}
+const a = new Proxy(new A(1), {
+    get: (target, property, receiver) => {
+        const value = Reflect.get(target, property, receiver)
+        if(value instanceof Function){
+            return (...args) => {
+                const res = value.call(target, ...args)
+                return res !== undefined ? res : receiver
+            }
+        }else{
+            return value
+        }
+    }
+})
+console.log(a.test())
+
+
+console.log("=================")
 
 class Parent{
     constructor(x){

@@ -1,5 +1,5 @@
 import {CC} from "./utilities/Utilities.js"
-import * as Module from "./utilities/ModuleBuilder.js"
+import Module from "./utilities/ModuleBuilder.js"
 import RootClass from "./RootClass.js"
 
 class GameObject extends RootClass{

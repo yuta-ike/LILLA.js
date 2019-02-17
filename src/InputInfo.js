@@ -1,4 +1,4 @@
-import * as Module from "./utilities/ModuleBuilder.js"
+import Module from "./utilities/ModuleBuilder.js"
 
 class InputInfo{
     constructor(mouseMap, prevMouseMap, cursorMap, prevCursorMap, clickMap, prevClickMap,touchMap, prevTouchMap, keyMap, prevKeyMap){
