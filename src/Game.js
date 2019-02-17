@@ -1,6 +1,6 @@
-import {sgn} from "./utilities/Utilities.js"
-import OBJECT from "./ObjectManager.js"
+import Module from "./utilities/ModuleBuilder.js"
 
+import OBJECT from "./ObjectManager.js"
 import LayerManager from "./Layer.js"
 import InputReceiver from "./Input.js"
 import SceneManager from "./Scene.js"
@@ -28,7 +28,7 @@ class Game extends OBJECT.GameObject{
     //     parent.add(obj)
     //     layer.add(obj)
     // }
-    set({clsName, args, parent, layer}){
+    regist(clsName, args, parent, layer){
         const _parent = this.findObjectWithName(parent)
         const _layer = this.findObjectWithName(layer, _layer => _layer.isLayer)
         if(_parent == null) throw new Error(`Unknown parent object named "${_parent}"`)
@@ -36,6 +36,9 @@ class Game extends OBJECT.GameObject{
         const obj = OBJECT.Create({clsName, args})
         _parent.add(obj)
         _layer.add(obj)
+    }
+    Regist({clsName, args, parent, layer}){
+        this.regist(clsName, args, parent, layer)
     }
 
     findObjectWithName(targetName, rest = x => x){
@@ -46,17 +49,28 @@ class Game extends OBJECT.GameObject{
         return null
     }
 
-    generateScene(name, tag, rect = this.screenRect, priority){
-        return SceneManager.generate(name, tag, rect, priority, {origin:[this.g.x,this.g.y]})
+    generateScene(name, tag=[], rect = this.screenRect, priority){
+        SceneManager.generate(name, tag, rect, priority, {origin:[this.g.x,this.g.y]})
     }
 
-    generateLayer(name, tag, rect = this.screenRect, priority = 0, layerType = "normal"){
-        return LayerManager.generate(name, tag, rect, priority, layerType)
+    Scene({name, tag=[], rect = this.screenRect, priority}={}){
+        this.generateScene(name, tag, rect, priority)
+    }
+
+    generateLayer(name, tag=[], rect = this.screenRect, priority = 0, layerType = "normal"){
+        LayerManager.generate(name, tag, rect, priority, layerType)
+    }
+
+    Layer({name, tag=[], rect = this.screenRect, priority = 0, layerType = "normal"}={}){
+        this.generateLayer(name,tag,rect,priority,layerType)
     }
 
     begin(){
         this._initAll()
         requestAnimationFrame(this._loop.bind(this))
+    }
+    Begin(){
+        this.begin()
     }
 
     _initAll(){
@@ -100,42 +114,4 @@ class Game extends OBJECT.GameObject{
     }
 }
 
-let hasCreated = false
-const GAME_CREATER = {
-    Create({name, tag=[], screenRect, pos=[0,0]}){
-        if(hasCreated) throw new Error(`It is forbidden to create game more than once.`)
-        if(name == null) throw new Error(`Invalid argument of GAME.Create. (name: ${name})`)
-        if(screenRect == null) throw new Error(`Invalid argument of GAME.Create. (screenRect: ${screenRect})`)
-        if(!sgn(screenRect).is("Rectangle")) throw new Error(`Invalid argument of GAME.Create. screenRect parameter must be Rectangle class. (screenRect: ${screenRect})`)
-        hasCreated = false
-
-        return new Game(name, tag, screenRect, pos)
-    }
-}
-
-// let hasConstructed = false
-// let instance
-// Game.Create = function(){console.log("create!!")}
-// const GAME = new Proxy(Game, {
-//     get: (target, property) => {
-//         if(!hasConstructed){
-//             if(property === "Create"){
-//                 hasConstructed = true
-//                 return (args) => instance = new target(args.name, [], args.screenRect, args.pos)
-//             }
-//             throw new Error(`Call create method before call another method.`)
-//         }else{
-//             if(property === "Create"){
-//                 throw new Error("Invalid function call of constructor-like method. Constructor-like method (Create) can be called only at once.")
-//             }
-//             return Reflect.get(instance, property)
-//         }
-//     },
-// })
-/*
-  GAME.Create()
-  GAME.generateScene()
-  ...
-  みたいに書きたい
-*/
-export default GAME_CREATER
+export default Module.Chainnable(Game)
