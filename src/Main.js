@@ -44,21 +44,32 @@ window.onload = ()=>{
             pos:[50,50]
         })
 
-        GAME.generateScene("main_scene",[])
-        GAME.generateLayer("main_layer",[], GAME.screenRect,1)
-        GAME.generateLayer("sub_layer",[], GAME.screenRect,0)
-        GAME.set({
-            clsName: "Obj1",
-            args: ["obj1", [], [0, 0], LILLA.SPRITE.Figure(LILLA.FIGURE.Circle(0,0,15),"green"), LILLA.FIGURE.Circle(0,0,15)],
-            parent: "main_scene",
-            layer: "main_layer",
-        })
-        GAME.set({
-            clsName: "Obj2",
-            args: ["obj2", [], [100, 100], LILLA.SPRITE.Image(LILLA.ASSETS.get("plain"), LILLA.FIGURE.Rectangle(0,0,30,30), LILLA.FIGURE.Rectangle(0,0,200,200)), LILLA.FIGURE.Rectangle(0,0,30,30)],
-            parent: "main_scene",
-            layer: "sub_layer",
-        })
+        GAME.generateScene({
+                name: "main_scene"
+            })
+            .generateLayer({
+                name: "main_layer",
+                screenRect: GAME.screenRect,
+                priority: 1
+            })
+            .generateLayer({
+                name: "sub_layer",
+                screenRect: GAME.screenRect,
+                priority: 0
+            })
+            .set({
+                clsName: "Obj1",
+                args: ["obj1", [], [0, 0], LILLA.SPRITE.Figure(LILLA.FIGURE.Circle(0,0,15),"green"), LILLA.FIGURE.Circle(0,0,15)],
+                parent: "main_scene",
+                layer: "main_layer",
+            })
+            .set({
+                clsName: "Obj2",
+                args: ["obj2", [], [100, 100], LILLA.SPRITE.Image(LILLA.ASSETS.get("plain"), LILLA.FIGURE.Rectangle(0,0,30,30), LILLA.FIGURE.Rectangle(0,0,200,200)), LILLA.FIGURE.Rectangle(0,0,30,30)],
+                parent: "main_scene",
+                layer: "sub_layer",
+            })
+
         GAME.begin()
     })
 }
