@@ -28,7 +28,7 @@ class Game extends OBJECT.GameObject{
     //     parent.add(obj)
     //     layer.add(obj)
     // }
-    regist(clsName, args, parent, layer){
+    Spawn({clsName, args, parent, layer}){
         const _parent = this.findObjectWithName(parent)
         const _layer = this.findObjectWithName(layer, _layer => _layer.isLayer)
         if(_parent == null) throw new Error(`Unknown parent object named "${_parent}"`)
@@ -36,9 +36,6 @@ class Game extends OBJECT.GameObject{
         const obj = OBJECT.Create({clsName, args})
         _parent.add(obj)
         _layer.add(obj)
-    }
-    Regist({clsName, args, parent, layer}){
-        this.regist(clsName, args, parent, layer)
     }
 
     findObjectWithName(targetName, rest = x => x){

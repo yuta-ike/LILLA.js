@@ -42,7 +42,7 @@ class CanvasManager extends RootClass{
             return this._usedCanvases.get(layerType)
         }else{
             const canvasElement = this._generate(...rect.spread)
-            const canvas = new Canvas(canvasElement, rect.duplicate())
+            const canvas = new Canvas(canvasElement, rect.copy())
             canvas.resize(...rect.spread)
             this._usedCanvases.set(layerType, canvas)
             return canvas

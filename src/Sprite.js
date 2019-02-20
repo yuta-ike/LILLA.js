@@ -1,6 +1,6 @@
 import RootClass from "./RootClass.js"
 import {Interface, sgn} from "./utilities/Utilities.js"
-import FIGURE, {instanceofFigure} from "./Figure.js"
+import Figure, {instanceofFigure} from "./Figure.js"
 import assets from "./AssetLoader.js"
 export * from "./AssetLoader.js"
 
@@ -14,7 +14,7 @@ class ImageSprite extends RootClass{
         super()
         this.implements(ISprite)
         this.image = image
-        this.figure = figure || FIGURE.Rectangle(0,0,image.width, image.height) //figureを指定しない場合は元の画像の大きさを採用
+        this.figure = figure || new (Figure.Rectangle)(0,0,image.width, image.height) //figureを指定しない場合は元の画像の大きさを採用
         this.trim = trim
     }
 
@@ -36,6 +36,7 @@ class ImageSprite extends RootClass{
     }
 }
 
+//ここをRectSpriteとかに変える
 class FigureSprite extends RootClass{
     constructor(figure, color = "black"){
         super()
@@ -70,16 +71,11 @@ class FigureSprite extends RootClass{
 */
 
 const SPRITE = {
-    Image: (image) => {
-        if(image == null) throw new Error(`Image is nuaable. (image:${image})`)
-        if(!instanceofImageAsset(image)) throw new Error(`Image must be instance of ImageAsset class.`)
-        return new ImageSprite(image)
-    },
     Image: (...arg) => {
         switch (true) {
-            case sgn(arg).is("String"):
-            case sgn(arg).is("String","Rectangle"):
-            case sgn(arg).is("String","Rectangle","Rectangle"):{
+            case sgn(...arg).is("String"):
+            case sgn(...arg).is("String","Rectangle"):
+            case sgn(...arg).is("String","Rectangle","Rectangle"):{
                 const imageName = arg[0]
                 const image = assets.get(imageName)
                 return new ImageSprite(image,...arg.slice(1))
@@ -103,7 +99,7 @@ const SPRITE = {
     },
     Figure: (figure, color) => {
         if(figure == null) throw new Error(`Figure is nullable. (figure:${figure})`)
-        if(!instanceofFigure(figure)) throw new Error(`Figure must be instance of Figure class.`)
+        if(!instanceofFigure(figure)) throw new Error(`Figure must be instance of RendFigure class.`)
         return new FigureSprite(figure, color)
     }
 }

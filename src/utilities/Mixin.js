@@ -6,12 +6,16 @@ const mix = (...clsList) => {
         constructor(args = {}){
             for(const cls of clsList){
                 //Methodのコピー
-                const desc = Object.getOwnPropertyDescriptors(cls.prototype)
-                delete desc.constructor
-                for(const [x,y] of cart(Object.keys(desc), Object.keys(Object.getOwnPropertyDescriptors(this.constructor.prototype)))){
-                    // if(x === y) console.warn(`Same method name ${x} when mixing ${clsList.map(cls => cls.name).toString().replace(/(?:.+){0,0},(?=[^,]+)/g, " and ").replace(/(?:.+){0,0} and (?=[^,]+)/, ", ")}`)
+                let clsTemp = cls
+                while(clsTemp.toString() !== "function () { [native code] }"){
+                    const desc = Object.getOwnPropertyDescriptors(clsTemp.prototype)
+                    delete desc.constructor
+                    // for(const [x,y] of cart(Object.keys(desc), Object.keys(Object.getOwnPropertyDescriptors(this.constructor.prototype)))){
+                    //     if(x === y) console.warn(`Same method name ${x} when mixing ${clsList.map(cls => cls.name).toString().replace(/(?:.+){0,0},(?=[^,]+)/g, " and ").replace(/(?:.+){0,0} and (?=[^,]+)/, ", ")}`)
+                    // }
+                    Object.defineProperties(this.constructor.prototype, desc)
+                    clsTemp = Object.getPrototypeOf(clsTemp)
                 }
-                Object.defineProperties(this.constructor.prototype, desc)
 
                 //propertyのコピー
                 //abstract class は直接インスタンス化できないので継承させてからインスタンス化させる

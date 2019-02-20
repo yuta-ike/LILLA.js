@@ -1,52 +1,19 @@
-import {Interface, mix, CC} from "./utilities/Utilities.js"
+import {Interface, mix} from "./utilities/Utilities.js"
 import RootClass from "./RootClass.js"
-
-class Figure{
-    hitTest(other){
-        return CC.cart(this.figures || [this], other.figures || [other])
-                 .reduce((acc, [thisFigure, otherFigure]) => acc || thisFigure._hitTestForUnits(otherFigure), false)
-    }
-    _hitTestForUnits(other){
-        switch ([this.constructor.name, other.constructor.name].join("-")) {
-            case "Rectangle-Rectangle":
-                const x = this.x <= other.x && other.x <= this.x + this.width ||
-                          this.x <= other.x + other.width && other.x + other.width <= this.x + this.width
-                const y = this.y <= other.y && other.y <= this.y + this.height ||
-                          this.y <= other.y + other.height && other.y + other.height <= this.y + this.height
-                return x && y
-
-            case "Circle-Circle":
-                return (this.x - other.x)**2 + (this.y - other.y)**2 < (this.r - other.r)**2
-
-            case "Rectangle-Circle":
-            case "Circle-Rectangle":
-                const [rect, circle] = this.constructor.name === "rect" ? [this, other] : [other, this]
-                const vertRect =  rect.x            < circle.x && circle.x < rect.x + rect.w ||
-                                  rect.y - circle.r < circle.y && circle.y < rect.y + rect.h + circle.r
-                const horizRect = rect.x - circle.r < circle.x && circle.x < rect.x + rect.w + circle.r ||
-                                  rect.y            < circle.y && circle.y < rect.y + rect.h
-                const corner = (rect.x          - circle.x)**2 + (rect.y          - circle.y)**2 < circle.r**2 ||
-                               (rect.x + rect.w - circle.x)**2 + (rect.y          - circle.y)**2 < circle.r**2 ||
-                               (rect.x          - circle.x)**2 + (rect.y + rect.h - circle.y)**2 < circle.r**2 ||
-                               (rect.x + rect.w - circle.x)**2 + (rect.y + rect.h - circle.y)**2 < circle.r**2
-                return vertRect || horizRect || corner
-        }
-    }
-}
+import MathFigure from "./MathFigure.js"
 
 class IFigure extends Interface{
     render(ctx, color = "black", {fill = true} = {}){}
 }
 
-class Rectangle extends mix(Figure, RootClass){
-    constructor(x,y,w,h){
-        super()
-        this.implements(IFigure)
+class Figure{}
 
-        this.x = x
-        this.y = y
-        this.width = w
-        this.height = h
+class Rectangle extends mix(MathFigure.Rectangle, Figure, RootClass){
+    constructor(x,y,w,h){
+        super({
+            [MathFigure.Rectangle.name]:[x,y,w,h],
+        })
+        this.implements(IFigure)
     }
 
     render(ctx, color = "black", {fill = true} = {}){
@@ -58,25 +25,14 @@ class Rectangle extends mix(Figure, RootClass){
             ctx.strokeRect(...this.spread)
         }
     }
-
-    duplicate(){ return new Rectangle(this.x, this.y, this.width, this.height) }
-
-    get spread(){ return [this.x, this.y, this.width, this.height] }
-    get w(){ return this.width }
-    get h(){ return this.height }
 }
 
-class Circle extends mix(Figure, RootClass){
-    constructor(x,y,r,{fill = true, startAngle = 0, endAngle = 2*Math.PI, anticlockwise = false} = {}){
-        super()
+class Circle extends mix(MathFigure.Circle, Figure, RootClass){
+    constructor(x,y,r,{startAngle = 0, endAngle = 2*Math.PI, anticlockwise = false} = {}){
+        super({
+            [MathFigure.Circle.name]: [x,y,r,{startAngle, endAngle, anticlockwise}]
+        })
         this.implements(IFigure)
-
-        this.x = x
-        this.y = y
-        this.radius = r
-        this.startAngle = startAngle
-        this.endAngle = endAngle
-        this.anticlockwise = anticlockwise
     }
 
     render(ctx, color = "black", {fill = true} = {}){
@@ -91,24 +47,23 @@ class Circle extends mix(Figure, RootClass){
             ctx.stroke()
         }
     }
-    get spread(){ return [this.x, this.y, this.r] }
-    get r(){ return this.radius }
 }
 
-class Compound extends mix(Figure, RootClass){
+class Compound extends mix(MathFigure.Compound, Figure, RootClass){
     constructor(...figures){
-        super()
-        this.figures = figures
+        super(...figures)
+        this.implements(IFigure)
     }
+
     render(...args){
         this.figures.forEach(figure => figure.render(...args))
     }
 }
 
 const FIGURE = {
-    // add:(newfigure) => {
-    //
-    // }
+    Define:(newfigure) => {
+
+    },
     Rectangle: (x,y,w,h) => {
         if(w <= 0 || h <= 0) throw new Error(`Width and Height of Rectangle must be positive value. (width:${w}, height:${h})`)
         if(x == null || y == null || w == null || h == null) throw new Error(`Arguments of Figure.Rectangle is(are) nullable. (x:${x}, y:${y}, width:${w}, height:${h})`)
@@ -119,6 +74,11 @@ const FIGURE = {
         if(x == null || y == null || r == null) throw new Error(`Argument(s) of Figure.Circle is(are) nullable. (x:${x}, y:${y}, radius:${r})`)
         return new Circle(x,y,r,property)
     },
+    Compound: (...rendFigures) => {
+        if(figures.length == 0) throw new Error(`Argument array of FIGURE.Compound is empty.`)
+        const isAllRenderingFigure = rendFigures.reduce((acc, rendFigure) => acc && (rendFigure instanceof Figure), true)
+        if(!isAllRenderingFigure) throw new Error(`Each element of argument array of FIGURE.Compound must be RendFigure.`)
+    }
 }
 export default FIGURE
 

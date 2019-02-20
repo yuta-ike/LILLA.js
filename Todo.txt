@@ -1,8 +1,13 @@
 当たり判定の精度あげる
 [no need] Rectangle Circleのmask
 [ok] ComposedFigureへの対応
-パイプ
+[ok] パイプ
 SPRITE.Figure と FIGURE がややこしい
+Rx対応
+includes の引数などで Point を使う
+MathFigureとFigureの分離
+Interfaceで引数の一致
+[ok] mixinでprototypechainを遡ってメソッドを追加する
 
 inputは座標をlocalizeして使わないといけない
 
@@ -10,11 +15,10 @@ Scene間の当たり判定は行わない
 当たり判定精度上げる
 座標管理モードと物理モード
 
-hitはイベント管理にする
+[ok] hitはイベント管理にする
 
 Mixin
 // TODO: static method への対応
 
-コルーチン Rx
 Overrideを禁止するprotected
 privateへの対応
