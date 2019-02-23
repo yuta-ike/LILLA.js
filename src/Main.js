@@ -40,22 +40,14 @@ window.onload = ()=>{
             pos:[20,20]
         })
 
-<<<<<<< HEAD
         GAME.Scene({
                 name: "main_scene"
             })
             .Layer({
-=======
-        GAME.generateScene({
-                name: "main_scene"
-            })
-            .generateLayer({
->>>>>>> 245d82471006506ff89543d09a2c897f63df344d
                 name: "main_layer",
                 screenRect: GAME.screenRect,
                 priority: 1
             })
-<<<<<<< HEAD
             .Spawn({
                 clsName: "Panel",
                 args: ["panel", [], [20, 20], LILLA.SPRITE.Figure(LILLA.FIGURE.Rectangle(0,0,80,50), "rgba(0,0,0,0.1)"), LILLA.FIGURE.Rectangle(0,0,80,50)],
@@ -65,26 +57,5 @@ window.onload = ()=>{
 
 
         GAME.Begin()
-=======
-            .generateLayer({
-                name: "sub_layer",
-                screenRect: GAME.screenRect,
-                priority: 0
-            })
-            .set({
-                clsName: "Obj1",
-                args: ["obj1", [], [0, 0], LILLA.SPRITE.Figure(LILLA.FIGURE.Circle(0,0,15),"green"), LILLA.FIGURE.Circle(0,0,15)],
-                parent: "main_scene",
-                layer: "main_layer",
-            })
-            .set({
-                clsName: "Obj2",
-                args: ["obj2", [], [100, 100], LILLA.SPRITE.Image(LILLA.ASSETS.get("plain"), LILLA.FIGURE.Rectangle(0,0,30,30), LILLA.FIGURE.Rectangle(0,0,200,200)), LILLA.FIGURE.Rectangle(0,0,30,30)],
-                parent: "main_scene",
-                layer: "sub_layer",
-            })
-
-        GAME.begin()
->>>>>>> 245d82471006506ff89543d09a2c897f63df344d
     })
 }

@@ -46,7 +46,6 @@ class Game extends OBJECT.GameObject{
         return null
     }
 
-<<<<<<< HEAD:src/Game.js
     generateScene(name, tag=[], rect = this.screenRect, priority){
         SceneManager.generate(name, tag, rect, priority, {origin:[this.g.x,this.g.y]})
     }
@@ -61,14 +60,6 @@ class Game extends OBJECT.GameObject{
 
     Layer({name, tag=[], rect = this.screenRect, priority = 0, layerType = "normal"}={}){
         this.generateLayer(name,tag,rect,priority,layerType)
-=======
-    generateScene({name, tag=[], rect = this.screenRect, priority}={}){
-        SceneManager.generate(name, tag, rect, priority, {origin:[this.g.x,this.g.y]})
-    }
-
-    generateLayer({name, tag=[], rect = this.screenRect, priority = 0, layerType = "normal"}={}){
-        LayerManager.generate(name, tag, rect, priority, layerType)
->>>>>>> 245d82471006506ff89543d09a2c897f63df344d:src/Game.js
     }
 
     begin(){
