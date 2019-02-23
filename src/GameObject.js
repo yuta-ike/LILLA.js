@@ -19,14 +19,14 @@ class GameObject extends RootClass{
         this.g = new Proxy({x:this.x, y:this.y}, {
             get: (_, name) =>{
                 if(!this.origin.hasOwnProperty(name)) throw new Error(`Unknown property "${name}" of origin`)
-                return this["_"+name] + this.origin[name]
+                return this[name] + this.origin[name]
             },
-            set: (_, name, value) => this["_"+name] = value - this.origin[name]
+            set: (_, name, value) => this[name] = value - this.origin[name]
         })
 
         this.hr = new HitRecorder()
-    }
 
+    }
     get x(){ return this._x }
     get y(){ return this._y }
     set x(v){
@@ -38,6 +38,14 @@ class GameObject extends RootClass{
         this._y = v
         this.dispatchEvent("sety")
         this.children.filter(child => child.posMode === "relative").forEach(child => child.setOrigin([this.g.x,this.g.y]))
+    }
+    move(dx, dy){
+        this.x += dx
+        this.y += dy
+    }
+    moveTo(x,y){
+        this.x = x
+        this.y = y
     }
 
     hasTag(tag){
@@ -54,7 +62,6 @@ class GameObject extends RootClass{
     setOrigin([x,y]){
         this.origin.x = x
         this.origin.y = y
-        this.dispatchEvent("originchange")
         this.children.filter(child => child.posMode === "relative").forEach(child => child.setOrigin([x,y]))
     }
 

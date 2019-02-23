@@ -10,13 +10,21 @@ class RigidObject extends GameObject{
 
         this.addEventListener("setx", () => this.sprite.x = this.hitArea.x = this.g.x)
         this.addEventListener("sety", () => this.sprite.y = this.hitArea.y = this.g.y)
-        this.addEventListener("originchange",
-            () => [this.sprite.x, this.sprite.y] = [this.hitArea.x, this.hitArea.y] = [this.g.x, this.g.y])
 
         this.isRigid = true//本来書きたくない
     }
-
     init(){
+        this.sprite.x = this.hitArea.x = this.g.x
+        this.sprite.y = this.hitArea.y = this.g.y
+    }
+
+    setOrigin([x,y]){
+        super.setOrigin([x,y])
+        if(this.constructor.name == "TextLabel"){
+            console.log(this.origin.x,this.origin.y)
+            console.trace()
+        }
+
         this.sprite.x = this.hitArea.x = this.g.x
         this.sprite.y = this.hitArea.y = this.g.y
     }

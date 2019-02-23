@@ -2,8 +2,8 @@ import LILLA from "./LILLA.js"
 import Draggable from "./DraggableObject.js"
 
 class TextLabel extends LILLA.OBJECT.RigidObject{
-    constructor(name, tag, origin, figure, content, textColor, bgColor){
-        super(name, tag, origin, LILLA.SPRITE.Figure(figure, bgColor), figure.copy())
+    constructor(name, tag, pos, figure, content, textColor, bgColor){
+        super(name, tag, pos, LILLA.SPRITE.Figure(figure, bgColor), figure.copy())
         this.content = content
         this.textColor = textColor
     }
@@ -12,7 +12,7 @@ class TextLabel extends LILLA.OBJECT.RigidObject{
         ctx.textAlign = "left"
         ctx.textBaseline = "top"
         ctx.fillStyle = this.textColor
-        ctx.fillText(this.content, this.hitArea.x, this.hitArea.y)
+        ctx.fillText(this.content, this.g.x, this.g.y)
     }
 }
 
@@ -20,14 +20,37 @@ class Panel extends Draggable{
     constructor(...args){
         super(...args)
         this.posMode = "absolute"
-        const titleLabel = new TextLabel("title", [], [this.x, this.y], LILLA.FIGURE.Rectangle(this.hitArea.width*0.1,this.hitArea.height*0.1,this.hitArea.width*0.8,this.hitArea.height*0.8), "TITLE", "blue", "rgba(0,0,0,00)")
+    }
+    init(){
+        const titleLabel = new TextLabel("title", [], [0, 0], LILLA.FIGURE.Rectangle(this.hitArea.width*0.1,this.hitArea.height*0.1,this.hitArea.width*0.8,this.hitArea.height*0.8), "TITLE", "blue", "rgba(0,0,0,00)")
         this.add(titleLabel)
     }
 }
 
+class Obj extends LILLA.OBJECT.RigidObject{
+    constructor(...args){
+        super(...args)
+        this.velocity = {x:1,y:1}
+    }
+    update(){
+        this.x += this.velocity.x
+        this.y += this.velocity.y
+        if(this.x > 200){
+            this.velocity.x *= -1
+            this.velocity.y *= -1
+        }
+    }
+}
+class Obj2 extends LILLA.OBJECT.RigidObject{
+    constructor(...args){
+        super(...args)
+    }
+}
 
 LILLA.OBJECT.Define(Panel)
 LILLA.OBJECT.Define(TextLabel)
+LILLA.OBJECT.Define(Obj)
+LILLA.OBJECT.Define(Obj2)
 
 window.onload = ()=>{
     LILLA.ASSETS.addImages({
@@ -40,51 +63,32 @@ window.onload = ()=>{
             pos:[20,20]
         })
 
-<<<<<<< HEAD
         GAME.Scene({
                 name: "main_scene"
             })
             .Layer({
-=======
-        GAME.generateScene({
-                name: "main_scene"
-            })
-            .generateLayer({
->>>>>>> 245d82471006506ff89543d09a2c897f63df344d
                 name: "main_layer",
                 screenRect: GAME.screenRect,
                 priority: 1
             })
-<<<<<<< HEAD
             .Spawn({
                 clsName: "Panel",
-                args: ["panel", [], [20, 20], LILLA.SPRITE.Figure(LILLA.FIGURE.Rectangle(0,0,80,50), "rgba(0,0,0,0.1)"), LILLA.FIGURE.Rectangle(0,0,80,50)],
+                args: ["panel", [], [100, 100], LILLA.SPRITE.Figure(LILLA.FIGURE.Rectangle(0,0,80,50), "rgba(0,0,0,0.1)"), LILLA.FIGURE.Rectangle(0,0,80,50)],
                 parent: "main_scene",
                 layer: "main_layer",
             })
-
-
-        GAME.Begin()
-=======
-            .generateLayer({
-                name: "sub_layer",
-                screenRect: GAME.screenRect,
-                priority: 0
-            })
-            .set({
-                clsName: "Obj1",
-                args: ["obj1", [], [0, 0], LILLA.SPRITE.Figure(LILLA.FIGURE.Circle(0,0,15),"green"), LILLA.FIGURE.Circle(0,0,15)],
+            .Spawn({
+                clsName: "Obj",
+                args: ["testObject1", [], [0,0], LILLA.SPRITE.Figure(LILLA.FIGURE.Rectangle(0,0,50,50), "red"), LILLA.FIGURE.Rectangle(0,0,50,50)],
                 parent: "main_scene",
                 layer: "main_layer",
             })
-            .set({
+            .Spawn({
                 clsName: "Obj2",
-                args: ["obj2", [], [100, 100], LILLA.SPRITE.Image(LILLA.ASSETS.get("plain"), LILLA.FIGURE.Rectangle(0,0,30,30), LILLA.FIGURE.Rectangle(0,0,200,200)), LILLA.FIGURE.Rectangle(0,0,30,30)],
-                parent: "main_scene",
-                layer: "sub_layer",
+                args: ["testObject2", [], [100,100], LILLA.SPRITE.Figure(LILLA.FIGURE.Rectangle(0,0,50,50), "rgba(0,255,0,0.9)"), LILLA.FIGURE.Rectangle(0,0,50,50)],
+                parent: "testObject1",
+                layer: "main_layer",
             })
-
-        GAME.begin()
->>>>>>> 245d82471006506ff89543d09a2c897f63df344d
+        GAME.Begin()
     })
 }
