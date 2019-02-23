@@ -44,7 +44,7 @@ class GameObject extends RootClass{
         return this.tag.has(tag)
     }
 
-    add(obj, parentObj){
+    add(obj){
         this.children.add(obj)
         if(!this.isLayer) obj.setOrigin([this.g.x, this.g.y])
         obj.addEventListener("spawn", newObj => this.children.add(newObj))

@@ -6,7 +6,7 @@ class Draggable extends LILLA.OBJECT.RigidObject{
         super(...args)
 
         const offset = {}
-        let isGrabbing = true
+        let isGrabbing = false
         this.InputAsObservable = new Subject()
         this.HitAsObservable = new Subject()
 
@@ -30,6 +30,9 @@ class Draggable extends LILLA.OBJECT.RigidObject{
             .filter(_ => isGrabbing)
             .filter(input => input.getMouseUp(0))
             .subscribe(_ => isGrabbing = false)
+
+        // this.InputAsObservable
+            // .subscribe(_ => console.log(this.hitArea))
     }
 
     update(input,hit){

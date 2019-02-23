@@ -7,6 +7,7 @@ Rx対応
 includes の引数などで Point を使う
 MathFigureとFigureの分離
 Interfaceで引数の一致
+RigidObjectとRenderObject
 [ok] mixinでprototypechainを遡ってメソッドを追加する
 
 inputは座標をlocalizeして使わないといけない

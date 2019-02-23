@@ -41,7 +41,7 @@ class Subject{
         return nextSubject
     }
     select(selFunc){ return this.map(selFunc) } //alias
-    mapTo(value){this.map(() => value)}
+    mapTo(value){return this.map(() => value)}
     scan(scanFunc, seed){
         const nextSubject = new Subject()
         let acc = seed
@@ -54,8 +54,17 @@ class Subject{
         })
         return nextSubject
     }
+    record(init){
+        const nextSubject = new Subject()
+        let prevData = init
+        this.subscribe(data => {
+            nextSubject.next({prev:prevData, current:data})
+            prevData = data
+        })
+        return nextSubject
+    }
     skip(skipNum){
-        const nextSuject = new Subject()
+        const nextSubject = new Subject()
         let num = 0
         this.subscribe(data => {
             if(num >= skipNum){
@@ -102,13 +111,13 @@ class Subject{
 
     combineLatest(combineFunc, ...observables){
         const nextSubject = new Subject()
-        const valueMap = new Map()
+        const valueArr = []
         this.subscribe(data => {
             nextSubject.next(data)
         })
         observables.forEach(observer => observer.subscribe(data => {
-            valueMap.set(observer, data)
-            this.next(combineFunc(valueMap))
+            valueArr[observers.indexOf(observer)] = data
+            this.next(combineFunc(...valueArr))
         }))
 
         return nextSubject
